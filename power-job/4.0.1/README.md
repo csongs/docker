@@ -1,5 +1,6 @@
 # 範例
-進入網址: http://127.0.0.1:7700/
+- 進入網址: http://127.0.0.1:7700/
+- powerjob 介紹: https://github.com/PowerJob/PowerJob
 ## http 範例
 - tech.powerjob.official.processors.impl.HttpProcessor
 - 任務參數
@@ -20,7 +21,7 @@
 ```
 {
 	"sql": "SELECT * FROM `powerjob-product`.app_info;",
-	"jdbcUrl": "jdbc:mysql://172.27.0.2:3306/powerjob-product?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Taipei",
+	"jdbcUrl": "jdbc:mysql://172.27.0.2:3306/powerjob-product?usrename=secret&password=secret&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Taipei",
 	"timeout": "30"
 
 }
