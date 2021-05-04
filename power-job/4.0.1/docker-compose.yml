@@ -1,0 +1,66 @@
+version: '2'
+services:
+  mysql:
+    image: mysql:5.7.31
+#    network_mode: "host"
+    environment:
+    - MYSQL_ROOT_PASSWORD=secret
+    - MYSQL_DATABASE=powerjob-product
+    - MYSQL_USER=secret
+    - MYSQL_PASSWORD=secret
+    volumes:
+    - ./mysql-data:/var/lib/mysql
+    networks:
+       extnetwork:
+          ipv4_address: 172.27.0.2
+    ports:
+    - "3306:3306"
+    
+  server:
+    image: tjqq/powerjob-server:4.0.1
+#    network_mode: "host"
+    environment:
+    - TZ=Asia/Tapipei
+    - PARAMS="--spring.profiles.active=product --spring.datasource.core.jdbc-url=jdbc:mysql://172.27.0.2:3306/powerjob-product?useUnicode=true&characterEncoding=UTF-8 --spring.datasource.core.username=secret --spring.datasource.core.password=secret " 
+    networks:
+       extnetwork:
+          ipv4_address: 172.27.0.3
+    ports:
+    - "7700:7700"
+    - "10086:10086"
+    depends_on: 
+    - mysql
+    
+  worker-1:
+    image: tjqq/powerjob-agent:4.0.1 
+    environment:
+    - TZ=Asia/Tapipei
+    - PARAMS=-a test -s 172.27.0.3:7700
+    networks:
+       extnetwork:
+          ipv4_address: 172.27.0.4
+    ports:
+    - "27777:27777"
+    depends_on: 
+    - server  
+
+  worker-2:
+    image: tjqq/powerjob-agent:4.0.1 
+    environment:
+    - TZ=Asia/Tapipei
+    - PARAMS=-a test -s 172.27.0.3:7700
+    - JVMOPTIONS=-Dpowerjob.official-processor.dynamic-datasource.enable=true
+    networks:
+       extnetwork:
+          ipv4_address: 172.27.0.5
+    ports:
+    - "27778:27777"
+    depends_on: 
+    - server  
+
+networks:
+   extnetwork:
+      ipam:
+         config:
+         - subnet: 172.27.0.0/16
+           gateway: 172.27.0.1
