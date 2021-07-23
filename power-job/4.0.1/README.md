@@ -30,3 +30,14 @@
 ```
 Worker 要配置開啟功能 -Dpowerjob.official-processor.dynamic-datasource.enable=true
 ```
+## sql範例2
+- DB資訊寫在worker裡面 
+- tech.powerjob.official.processors.impl.sql.SpringDatasourceSqlProcessor
+```
+{
+    "dataSourceName": "test",
+    "sql": "SELECT country_name  from dbo.crm_country ",
+    "timeout": 10,
+    "showResult": true
+}
+```
